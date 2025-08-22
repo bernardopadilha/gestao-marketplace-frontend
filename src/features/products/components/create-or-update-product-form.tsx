@@ -106,7 +106,7 @@ export default function CreateOrUpdateProductForm({
               Dados do produto
             </h2>
 
-            <Badge status={status as Status}>{status}</Badge>
+            {status && <Badge status={status as Status}>{status}</Badge>}
           </div>
           <div className="space-y-5">
             <div className="flex items-start gap-5">
@@ -119,6 +119,7 @@ export default function CreateOrUpdateProductForm({
                     <FormControl>
                       <Input
                         {...field}
+                        type="text"
                         placeholder="Nome do produto"
                         className="flex-1"
                       />
@@ -137,6 +138,7 @@ export default function CreateOrUpdateProductForm({
                       <div className="relative">
                         <Input
                           {...field}
+                          type="number"
                           placeholder="0,00"
                           className="flex-1 pl-6"
                         />
@@ -160,7 +162,7 @@ export default function CreateOrUpdateProductForm({
                   <FormControl>
                     <Textarea
                       {...field}
-                      className="resize-none h-20"
+                      className="resize-none h-28"
                       placeholder="Escreva detalhes sobre o produto, tamanho, características"
                     />
                   </FormControl>
