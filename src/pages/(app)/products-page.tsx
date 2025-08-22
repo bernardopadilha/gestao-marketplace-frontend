@@ -7,7 +7,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 export default function ProductsPage() {
   return (
-    <div className="flex-1 flex py-16 justify-center">
+    <div className="flex-1 flex py-5 justify-center">
       <div className="flex flex-col max-w-6xl w-full">
         {products.length <= 0 ? (
           <div className="w-full flex flex-col items-center justify-center gap-5">
@@ -25,7 +25,11 @@ export default function ProductsPage() {
               className="size-10 text-primary"
             />
 
-            <NewProductBtn align="center" className="h-14 w-56" />
+            <NewProductBtn
+              to={'/novo-produto'}
+              align="center"
+              className="h-14 w-56"
+            />
           </div>
         ) : (
           <>

@@ -9,7 +9,6 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import DateRangePicker from '@/components/ui/date-range-picker'
-import { subDays } from 'date-fns'
 import { useMemo, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
 import { chartData } from '../mock/chart-data'
@@ -21,13 +20,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function LineChartVisitors() {
-  const today = new Date()
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: subDays(today, 30),
-    to: today,
-  })
-
+export function LineChartVisitors({
+  date,
+  setDate,
+}: {
+  date: DateRange | undefined
+  setDate: React.Dispatch<React.SetStateAction<DateRange | undefined>>
+}) {
   const [activeChart] = useState<keyof typeof chartConfig>('visitors')
 
   // const total = React.useMemo(
@@ -48,7 +47,7 @@ export function LineChartVisitors() {
   }, [date, chartData])
 
   return (
-    <Card className="p-6 max-w-4xl shadow-none border-none hover:scale-[.99] transition-all duration-300">
+    <Card className="p-6 max-w-4xl shadow-none border-none hover:scale-[.98] transition-all duration-300">
       <CardHeader className="flex flex-col items-stretch p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1">
           <CardTitle className="font-secondary font-bold text-lg">
@@ -62,14 +61,7 @@ export function LineChartVisitors() {
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <LineChart
-            accessibilityLayer
-            data={filteredData}
-            // margin={{
-            //   left: 12,
-            //   right: 12,
-            // }}
-          >
+          <LineChart accessibilityLayer data={filteredData}>
             <CartesianGrid
               vertical={false}
               strokeDasharray={'8 8'}

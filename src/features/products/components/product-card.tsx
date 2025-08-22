@@ -40,7 +40,7 @@ export default function ProductCard({
             })}
           </p>
         </div>
-        <p className="text-sm line-clamp-2">{description}</p>
+        <p className="text-xs line-clamp-2">{description}</p>
       </div>
     </Link>
   )

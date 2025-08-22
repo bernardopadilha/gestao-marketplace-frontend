@@ -15,15 +15,20 @@ import {
   Call02Icon,
   Mail02Icon,
   User03Icon,
+  ViewIcon,
+  ViewOffIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import SelectImageBtn from '@/components/select-image-btn'
-import { useRef } from 'react'
+import { cn } from '@/lib/utils'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { signUpSchema, type SignUpSchemaProps } from '../schema'
 
 export function SignUpForm() {
+  const [inputType, setInputType] = useState<'text' | 'password'>('password')
+
   const form = useForm<SignUpSchemaProps>({
     resolver: zodResolver(signUpSchema),
   })
@@ -103,7 +108,21 @@ export function SignUpForm() {
               <FormControl>
                 <InputIcon
                   {...field}
-                  type="number"
+                  type="tel"
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/\D/g, '') // remove tudo que não é número
+                    if (val.length > 11) val = val.slice(0, 11)
+
+                    if (val.length > 6) {
+                      val = `(${val.slice(0, 2)}) ${val.slice(2, 7)}-${val.slice(7)}`
+                    } else if (val.length > 2) {
+                      val = `(${val.slice(0, 2)}) ${val.slice(2)}`
+                    } else if (val.length > 0) {
+                      val = `(${val}`
+                    }
+
+                    field.onChange(val)
+                  }}
                   icon={Call02Icon}
                   placeholder="(00) 00000-0000"
                 />
@@ -141,12 +160,38 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>SENHA</FormLabel>
               <FormControl>
-                <InputIcon
-                  {...field}
-                  type="password"
-                  icon={AccessIcon}
-                  placeholder="Sua senha de acesso"
-                />
+                <div className="relative">
+                  <InputIcon
+                    {...field}
+                    type={inputType}
+                    icon={AccessIcon}
+                    placeholder="Sua senha de acesso"
+                  />
+                  <Button
+                    type="button"
+                    variant={'ghost'}
+                    size={'icon'}
+                    className="absolute bottom-2 right-2"
+                    onClick={() =>
+                      setInputType(inputType === 'text' ? 'password' : 'text')
+                    }
+                  >
+                    <HugeiconsIcon
+                      icon={ViewIcon}
+                      className={cn(
+                        'size-5',
+                        inputType === 'password' ? 'block' : 'hidden',
+                      )}
+                    />
+                    <HugeiconsIcon
+                      icon={ViewOffIcon}
+                      className={cn(
+                        'size-5',
+                        inputType === 'text' ? 'block' : 'hidden',
+                      )}
+                    />
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -160,12 +205,38 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>CONFIRMAR SENHA</FormLabel>
               <FormControl>
-                <InputIcon
-                  {...field}
-                  type="password"
-                  icon={AccessIcon}
-                  placeholder="Sua senha de acesso"
-                />
+                <div className="relative">
+                  <InputIcon
+                    {...field}
+                    type={inputType}
+                    icon={AccessIcon}
+                    placeholder="Sua senha de acesso"
+                  />
+                  <Button
+                    type="button"
+                    variant={'ghost'}
+                    size={'icon'}
+                    className="absolute bottom-2 right-2"
+                    onClick={() =>
+                      setInputType(inputType === 'text' ? 'password' : 'text')
+                    }
+                  >
+                    <HugeiconsIcon
+                      icon={ViewIcon}
+                      className={cn(
+                        'size-5',
+                        inputType === 'password' ? 'block' : 'hidden',
+                      )}
+                    />
+                    <HugeiconsIcon
+                      icon={ViewOffIcon}
+                      className={cn(
+                        'size-5',
+                        inputType === 'text' ? 'block' : 'hidden',
+                      )}
+                    />
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

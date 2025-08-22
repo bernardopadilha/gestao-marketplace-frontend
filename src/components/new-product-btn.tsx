@@ -8,15 +8,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 export default function NewProductBtn({
   align = 'end',
   className,
+  ...props
 }: {
-  align?: 'center' | 'end' | 'start' | undefined
+  align?: 'center' | 'end' | 'start'
   className?: string
-}) {
+} & React.ComponentProps<typeof Link>) {
   return (
     <Tooltip delayDuration={7000}>
       <TooltipTrigger asChild>
         <Button asChild className={cn('font-normal', className)}>
-          <Link to={'/novo/produto'}>
+          <Link {...props}>
             <HugeiconsIcon icon={PlusSignIcon} className="size-[14px]" />
             Novo produto
           </Link>

@@ -18,7 +18,7 @@ export default function UpdateProductPage() {
   if (!product) navigate('/produtos')
 
   return (
-    <div className="flex-1 flex py-16 justify-center">
+    <div className="flex-1 flex py-5 justify-center">
       <div className="w-full max-w-6xl flex flex-col">
         <div className="space-y-2">
           <Button variant={'ghost'} className="text-primary " asChild>
@@ -27,7 +27,7 @@ export default function UpdateProductPage() {
               Voltar
             </Link>
           </Button>
-          <div className="w-full flex items-end justify-between">
+          <div className="w-full flex flex-col items-start md:flex-row md:items-end justify-between">
             <div className="space-y-2">
               <h1 className="font-secondary text-2xl font-bold">
                 Editar produto
@@ -36,7 +36,7 @@ export default function UpdateProductPage() {
                 Gerencie as informações do produto cadastrado
               </p>
             </div>
-            <div className="space-x-4">
+            <div className="w-full md:w-fit flex items-center justify-end gap-4 mt-5 md:mt-0">
               <Button variant={'ghost'} className="text-primary">
                 <HugeiconsIcon icon={Tick02Icon} />
                 Marcar como vendido

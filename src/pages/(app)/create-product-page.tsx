@@ -2,7 +2,7 @@ import CreateOrUpdateProductForm from '@/features/products/components/create-or-
 
 export default function CreateProductPage() {
   return (
-    <div className="flex-1 flex py-16 justify-center">
+    <div className="flex-1 flex py-5 justify-center">
       <div className="w-full max-w-6xl flex flex-col">
         <div className="w-full flex items-end justify-between">
           <div className="space-y-2">

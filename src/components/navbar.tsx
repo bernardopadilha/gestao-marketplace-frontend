@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import {
   ChartHistogramIcon,
   Menu01Icon,
@@ -9,7 +10,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Logo } from './logo'
 import NewProductBtn from './new-product-btn'
 import { Button } from './ui/button'
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet'
 import { UserButton } from './user-button'
 
 export default function Navbar() {
@@ -38,19 +39,31 @@ function MobileNavbar() {
               <HugeiconsIcon icon={Menu01Icon} className="" />
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-[400px] sm:w-[540px] p-5" side="left">
-            <Logo size="sm" />
-            <div className="flex flex-col gap-1 pt-4">
-              {items.map((item) => (
-                <NavbarItem
-                  key={item.label}
-                  link={item.link}
-                  label={item.label}
-                  icon={item.icon}
-                  clickCallBack={() => setIsOpen((prev) => !prev)}
-                />
-              ))}
+          <SheetContent
+            className="w-[400px] sm:w-[540px] p-5 justify-between"
+            side="left"
+          >
+            <div>
+              <Logo size="sm" />
+              <div className="flex flex-col gap-1 pt-4 mt-60">
+                {items.map((item) => (
+                  <NavbarItem
+                    key={item.label}
+                    link={item.link}
+                    label={item.label}
+                    icon={item.icon}
+                    clickCallBack={() => setIsOpen((prev) => !prev)}
+                  />
+                ))}
+              </div>
             </div>
+            <SheetClose asChild>
+              <NewProductBtn
+                to={'/novo-produto'}
+                className="w-full"
+                onClick={() => setIsOpen(false)}
+              />
+            </SheetClose>
           </SheetContent>
         </Sheet>
 
@@ -63,6 +76,7 @@ function MobileNavbar() {
 }
 
 function DesktopNavbar() {
+  const { pathname } = useLocation()
   return (
     <div className="hidden border-separate border-b border-shape bg-background md:block p-5">
       <nav className="mx-auto flex items-center justify-between ">
@@ -78,7 +92,10 @@ function DesktopNavbar() {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <NewProductBtn />
+          <NewProductBtn
+            to={'/novo-produto'}
+            className={cn(pathname === '/novo-produto' && 'hidden')}
+          />
 
           <UserButton />
         </div>

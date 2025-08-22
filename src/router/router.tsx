@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
         element: <UpdateProductPage />,
       },
       {
-        path: '/novo/produto',
+        path: '/novo-produto',
         element: <CreateProductPage />,
       },
     ],

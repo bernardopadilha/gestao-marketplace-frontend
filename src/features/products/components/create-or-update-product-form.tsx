@@ -19,8 +19,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Cancel01Icon } from '@hugeicons/core-free-icons'
+import { AlertCircleIcon, Cancel01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
@@ -48,7 +49,7 @@ export default function CreateOrUpdateProductForm({
     defaultValues: {
       title,
       price,
-      image,
+      image: image ?? undefined,
       category,
       description,
     },
@@ -71,7 +72,10 @@ export default function CreateOrUpdateProductForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(OnSubmit)} className="flex gap-6 mt-10">
+      <form
+        onSubmit={form.handleSubmit(OnSubmit)}
+        className="flex flex-col items-center lg:items-start lg:flex-row gap-6 mt-10"
+      >
         <FormField
           control={form.control}
           name="image"
@@ -95,7 +99,23 @@ export default function CreateOrUpdateProductForm({
                   </div>
                 </div>
               </FormControl>
-              <FormMessage />
+
+              <p
+                data-slot="form-message"
+                className={cn(
+                  'text-destructive text-xs flex items-center gap-1',
+                )}
+              >
+                {form.formState.errors.image && !field.value && (
+                  <>
+                    <HugeiconsIcon
+                      icon={AlertCircleIcon}
+                      className="size-[14px]"
+                    />
+                    Você precisa selecionar uma imagem
+                  </>
+                )}
+              </p>
             </FormItem>
           )}
         />
@@ -138,8 +158,14 @@ export default function CreateOrUpdateProductForm({
                       <div className="relative">
                         <Input
                           {...field}
-                          type="number"
+                          type="text"
                           placeholder="0,00"
+                          onChange={(e) => {
+                            let val = e.target.value.replace(/\D/g, '')
+                            val = (Number(val) / 100).toFixed(2)
+                            val = val.replace('.', ',')
+                            field.onChange(val)
+                          }}
                           className="flex-1 pl-6"
                         />
                         <span className="absolute bottom-3 text-gray-400">
@@ -205,7 +231,7 @@ export default function CreateOrUpdateProductForm({
                           Saúde & Beleza
                         </SelectItem>
                         <SelectItem value="utensilio">Utensílio</SelectItem>
-                        <SelectItem value="vestuário">Vestuário</SelectItem>
+                        <SelectItem value="vestuario">Vestuário</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

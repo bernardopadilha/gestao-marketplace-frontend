@@ -14,7 +14,7 @@ export default function StatCard({
   iconColor?: string
 }) {
   return (
-    <div className="p-3 w-full flex items-center gap-4 bg-white rounded-[20px] sm:min-w-[230px] lg:min-w-3xs lg:max-w-3xs hover:scale-[.99] transition-all duration-300">
+    <div className="p-3 w-full flex items-center gap-4 bg-white rounded-[20px] sm:min-w-[230px] lg:min-w-3xs lg:max-w-3xs hover:scale-[.98] transition-all duration-300">
       <div className="h-20 w-[86px] flex items-center justify-center bg-blue-100 rounded-[12px]">
         <HugeiconsIcon icon={icon} className={cn('size-9', iconColor)} />
       </div>

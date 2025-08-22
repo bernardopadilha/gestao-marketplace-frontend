@@ -8,17 +8,23 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { InputIcon } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   AccessIcon,
   ArrowRight02Icon,
   Mail02Icon,
+  ViewIcon,
+  ViewOffIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { signInSchema, type SignInSchemaProps } from '../schema'
 
 export function SignInForm() {
+  const [inputType, setInputType] = useState<'text' | 'password'>('password')
+
   const form = useForm<SignInSchemaProps>({
     resolver: zodResolver(signInSchema),
   })
@@ -60,12 +66,38 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>SENHA</FormLabel>
               <FormControl>
-                <InputIcon
-                  {...field}
-                  type="password"
-                  icon={AccessIcon}
-                  placeholder="Sua senha de acesso"
-                />
+                <div className="relative">
+                  <InputIcon
+                    {...field}
+                    type={inputType}
+                    icon={AccessIcon}
+                    placeholder="Sua senha de acesso"
+                  />
+                  <Button
+                    type="button"
+                    variant={'ghost'}
+                    size={'icon'}
+                    className="absolute bottom-2 right-2"
+                    onClick={() =>
+                      setInputType(inputType === 'text' ? 'password' : 'text')
+                    }
+                  >
+                    <HugeiconsIcon
+                      icon={ViewIcon}
+                      className={cn(
+                        'size-5',
+                        inputType === 'password' ? 'block' : 'hidden',
+                      )}
+                    />
+                    <HugeiconsIcon
+                      icon={ViewOffIcon}
+                      className={cn(
+                        'size-5',
+                        inputType === 'text' ? 'block' : 'hidden',
+                      )}
+                    />
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -26,7 +26,7 @@ export default function DateRangePicker({
           <Button
             variant="ghost"
             data-empty={!date}
-            className="w-fit justify-start text-left font-normal hover:bg-blue-100 hover:text-blue-300"
+            className="w-fit justify-start text-left font-normal hover:bg-blue-100/30 hover:text-blue-300"
           >
             <HugeiconsIcon
               icon={Calendar04Icon}
@@ -51,13 +51,14 @@ export default function DateRangePicker({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent align="end" className="w-auto p-0">
           <Calendar
             mode="range"
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
             pagedNavigation
+            disabled={(date) => date > new Date()}
             showOutsideDays={false}
             className="rounded-md border p-2"
             classNames={{
