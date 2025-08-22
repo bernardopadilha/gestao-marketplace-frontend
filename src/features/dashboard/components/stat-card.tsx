@@ -1,3 +1,4 @@
+import ReactCountUpWrapper from '@/components/react-count-up-wrapper'
 import { cn } from '@/lib/utils'
 import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react'
 
@@ -18,7 +19,9 @@ export default function StatCard({
         <HugeiconsIcon icon={icon} className={cn('size-9', iconColor)} />
       </div>
       <div>
-        <h1 className="text-gray-400 font-semibold text-[28px]">{value}</h1>
+        <h1 className="text-gray-400 font-semibold text-[28px]">
+          <ReactCountUpWrapper value={value} />
+        </h1>
         <p className="text-sm">
           <span className="block">{title.split(' ')[0]}</span>
           <span className="block">{title.split(' ')[1]}</span>
