@@ -38,7 +38,7 @@ export default function ProductsPage() {
               </p>
             </div>
             <div className="flex flex-col lg:flex-row gap-6 mt-10">
-              <div className="sticky top-10 h-fit self-start">
+              <div className="static lg:sticky top-10 h-fit lg:self-start">
                 <FilterProductsCard />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2  gap-5">

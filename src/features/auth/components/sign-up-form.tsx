@@ -13,13 +13,12 @@ import {
   AccessIcon,
   ArrowRight02Icon,
   Call02Icon,
-  Cancel01Icon,
-  ImageUpload01Icon,
   Mail02Icon,
   User03Icon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import SelectImageBtn from '@/components/select-image-btn'
 import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { signUpSchema, type SignUpSchemaProps } from '../schema'
@@ -60,54 +59,7 @@ export function SignUpForm() {
               <FormControl>
                 <div className="fle-col flex gap-y-2">
                   <div className="relative inline-flex">
-                    <Button
-                      type="button"
-                      className="relative size-[120px] bg-shape p-0 overflow-hidden"
-                      onClick={() => inputRef.current?.click()}
-                    >
-                      {field.value ? (
-                        <img
-                          className="size-full object-cover"
-                          src={
-                            field.value instanceof File
-                              ? URL.createObjectURL(field.value)
-                              : field.value
-                          }
-                          alt="Preview of uploaded image"
-                          width={64}
-                          height={64}
-                          style={{ objectFit: 'cover' }}
-                        />
-                      ) : (
-                        <div aria-hidden="true">
-                          <HugeiconsIcon
-                            icon={ImageUpload01Icon}
-                            className="size-7 text-primary"
-                          />
-                        </div>
-                      )}
-                    </Button>
-
-                    {field.value && (
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          field.onChange(null)
-                          if (inputRef.current) {
-                            inputRef.current.value = ''
-                          }
-                        }}
-                        size="icon"
-                        className="border-white absolute -top-2 -right-2 size-6 rounded-full border-2 bg-shape"
-                        aria-label="Remove image"
-                      >
-                        <HugeiconsIcon
-                          icon={Cancel01Icon}
-                          className="size-3.5 text-primary"
-                        />
-                      </Button>
-                    )}
-
+                    <SelectImageBtn field={field} inputRef={inputRef} />
                     <input
                       type="file"
                       ref={inputRef}

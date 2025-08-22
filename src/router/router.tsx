@@ -2,6 +2,7 @@ import AuthLayout from '@/layouts/auth-layout'
 import RootLayout from '@/layouts/root-layout'
 import DashboardPage from '@/pages/(app)/dashboard'
 import ProductsPage from '@/pages/(app)/products'
+import UpdateProductPage from '@/pages/(app)/update-product'
 import SignInPage from '@/pages/(auth)/sign-in'
 import SignUpPage from '@/pages/(auth)/sign-up'
 import { createBrowserRouter } from 'react-router-dom'
@@ -21,7 +22,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/produto/:productId',
-        element: <SignUpPage />,
+        element: <UpdateProductPage />,
       },
       {
         path: '/novo/produto',
