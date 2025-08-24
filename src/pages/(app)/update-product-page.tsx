@@ -1,11 +1,9 @@
+import { Loader } from '@/components/loader'
 import { Button } from '@/components/ui/button'
-import { products } from '@/features/dashboard/mock/products'
-import CreateOrUpdateProductForm from '@/features/products/components/create-or-update-product-form'
-import {
-  ArrowLeft02Icon,
-  Tick02Icon,
-  UnavailableIcon,
-} from '@hugeicons/core-free-icons'
+import { useGetProduct } from '@/features/products/api/use-get-product'
+import { UpdateProductForm } from '@/features/products/components/update-product-form'
+
+import { ArrowLeft02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
@@ -13,9 +11,22 @@ export default function UpdateProductPage() {
   const { productId } = useParams<{ productId: string }>()
   const navigate = useNavigate()
 
-  const product = products.filter((product) => product.id === productId)[0]
+  const {
+    data: product,
+    isLoading,
+    isError,
+  } = useGetProduct({
+    productId: productId ?? '',
+  })
 
-  if (!product) navigate('/produtos')
+  if (isLoading) {
+    return <Loader />
+  }
+
+  if (isError || !product || !('title' in product)) {
+    navigate('/produtos')
+    return null
+  }
 
   return (
     <div className="flex-1 flex py-5 justify-center">
@@ -36,25 +47,10 @@ export default function UpdateProductPage() {
                 Gerencie as informações do produto cadastrado
               </p>
             </div>
-            <div className="w-full md:w-fit flex items-center justify-end gap-4 mt-5 md:mt-0">
-              <Button variant={'ghost'} className="text-primary">
-                <HugeiconsIcon icon={Tick02Icon} />
-                Marcar como vendido
-              </Button>
-
-              <Button variant={'ghost'} className="text-primary">
-                <HugeiconsIcon icon={UnavailableIcon} />
-                Desativar anúncio
-              </Button>
-            </div>
           </div>
         </div>
 
-        <CreateOrUpdateProductForm
-          {...product}
-          image={product.imageUrl}
-          price={String(product.price)}
-        />
+        <UpdateProductForm productId={productId ?? ''} {...product} />
       </div>
     </div>
   )

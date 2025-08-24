@@ -1,4 +1,4 @@
-import CreateOrUpdateProductForm from '@/features/products/components/create-or-update-product-form'
+import { CreateProductForm } from '@/features/products/components/create-product-form'
 
 export default function CreateProductPage() {
   return (
@@ -13,7 +13,7 @@ export default function CreateProductPage() {
           </div>
         </div>
 
-        <CreateOrUpdateProductForm />
+        <CreateProductForm />
       </div>
     </div>
   )

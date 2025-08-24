@@ -1,6 +1,6 @@
 import z from 'zod'
 
-export const productSchema = z.object({
+export const createProductSchemaProps = z.object({
   title: z
     .string({ error: 'Por favor preencha esse campo' })
     .min(1, 'Nome é obrigatório'),
@@ -26,4 +26,7 @@ export const productSchema = z.object({
   ]),
 })
 
-export type ProductSchemaProps = z.infer<typeof productSchema>
+export type CreateProductSchemaProps = z.infer<typeof createProductSchemaProps>
+
+export const updateProductSchema = createProductSchemaProps.partial()
+export type UpdateProductSchemaProps = z.infer<typeof updateProductSchema>

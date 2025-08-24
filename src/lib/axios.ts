@@ -7,14 +7,29 @@ export const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const token = Cookies.get('token')
+  const accessToken = Cookies.get('accessToken')
 
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`
+  if (accessToken && config.headers) {
+    config.headers.Authorization = `Bearer ${accessToken}`
   }
 
   return config
 })
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      const { data } = error.response
+
+      if (data && data.message) {
+        error.message = data.message
+      }
+    }
+
+    return Promise.reject(error)
+  },
+)
 
 if (env.VITE_ENABLE_API_DELAY) {
   api.interceptors.request.use(async (config) => {

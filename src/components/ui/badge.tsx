@@ -3,7 +3,7 @@ import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 
-export type Status = 'anunciado' | 'vendido' | 'cancelado' | 'default'
+export type Status = 'ANUNCIADO' | 'VENDIDO' | 'CANCELADO' | 'default'
 
 interface BadgeProps
   extends React.ComponentProps<'span'>,
@@ -13,9 +13,9 @@ interface BadgeProps
 }
 
 const statusColors: Record<Status, string> = {
-  anunciado: 'bg-blue-300 text-white',
-  vendido: 'bg-success text-white',
-  cancelado: 'bg-gray-300 text-white border-gray-500',
+  ANUNCIADO: 'bg-blue-300 text-white',
+  VENDIDO: 'bg-success text-white',
+  CANCELADO: 'bg-gray-300 text-white border-gray-500',
   default: 'bg-gray-400 text-white border-gray-400',
 }
 

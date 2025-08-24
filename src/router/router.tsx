@@ -7,11 +7,16 @@ import UpdateProductPage from '@/pages/(app)/update-product-page'
 import SignInPage from '@/pages/(auth)/sign-in'
 import SignUpPage from '@/pages/(auth)/sign-up'
 import { createBrowserRouter } from 'react-router-dom'
+import { ProtectRoute } from './middlewares/protect-route'
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <RootLayout />,
+    element: (
+      <ProtectRoute isProtected>
+        <RootLayout />
+      </ProtectRoute>
+    ),
     children: [
       {
         index: true,
@@ -33,7 +38,11 @@ export const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <AuthLayout />,
+    element: (
+      <ProtectRoute>
+        <AuthLayout />
+      </ProtectRoute>
+    ),
     children: [
       {
         path: '/sign-in',

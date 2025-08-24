@@ -23,42 +23,50 @@ import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircleIcon, Cancel01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { Loader2Icon } from 'lucide-react'
 import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { productSchema, type ProductSchemaProps } from '../schema'
+import { useNavigate } from 'react-router-dom'
+import { useUpdateProduct } from '../api/use-update-product'
+import { updateProductSchema, type UpdateProductSchemaProps } from '../schema'
+import { Category } from '../types'
 
-interface CreateOrUpdateProductFormProps {
+interface UpdateProductFormProps {
   title?: string
   description?: string
-  price?: string
+  price?: number
   category?: string
-  image?: any
+  imageUrl?: any
   status?: string
+  productId: string
 }
 
-export default function CreateOrUpdateProductForm({
+export function UpdateProductForm({
   title,
   price,
-  image,
+  imageUrl,
   status,
   category,
   description,
-}: CreateOrUpdateProductFormProps) {
-  const form = useForm<ProductSchemaProps>({
-    resolver: zodResolver(productSchema),
+  productId,
+}: UpdateProductFormProps) {
+  const navigate = useNavigate()
+
+  function formatPrice(value?: number | null) {
+    if (!value) return ''
+    return (value / 100).toFixed(2).replace('.', ',')
+  }
+
+  const form = useForm<UpdateProductSchemaProps>({
+    resolver: zodResolver(updateProductSchema),
     defaultValues: {
       title,
-      price,
-      image: image ?? undefined,
+      price: formatPrice(price),
+      image: imageUrl ?? undefined,
       category,
       description,
     },
   })
-
-  function OnSubmit(data: ProductSchemaProps) {
-    console.log(data)
-    form.reset()
-  }
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -68,6 +76,14 @@ export default function CreateOrUpdateProductForm({
     if (file) {
       form.setValue('image', file)
     }
+  }
+
+  const { mutate, isPending } = useUpdateProduct({
+    productId,
+  })
+
+  function OnSubmit(data: UpdateProductSchemaProps) {
+    mutate(data)
   }
 
   return (
@@ -224,14 +240,22 @@ export default function CreateOrUpdateProductForm({
                         </Button>
                       )}
                       <SelectContent>
-                        <SelectItem value="brinquedo">Brinquedo</SelectItem>
-                        <SelectItem value="moveis">Móvel</SelectItem>
-                        <SelectItem value="papelaria">Papelaria</SelectItem>
-                        <SelectItem value="saude & beleza">
+                        <SelectItem value={Category.BRINQUEDO}>
+                          Brinquedo
+                        </SelectItem>
+                        <SelectItem value={Category.MOVEL}>Móvel</SelectItem>
+                        <SelectItem value={Category.PAPELARIA}>
+                          Papelaria
+                        </SelectItem>
+                        <SelectItem value={Category.SAUDE_E_BELEZA}>
                           Saúde & Beleza
                         </SelectItem>
-                        <SelectItem value="utensilio">Utensílio</SelectItem>
-                        <SelectItem value="vestuario">Vestuário</SelectItem>
+                        <SelectItem value={Category.UTENSILIO}>
+                          Utensílio
+                        </SelectItem>
+                        <SelectItem value={Category.VESTUARIO}>
+                          Vestuário
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -242,14 +266,25 @@ export default function CreateOrUpdateProductForm({
 
             <div className="grid grid-cols-2 items-center gap-3">
               <Button
+                type="button"
+                disabled={isPending}
                 size={'lg'}
+                onClick={() => navigate('/produtos')}
                 variant={'outline'}
                 className="justify-center rounded-[10px]"
               >
                 Cancelar
               </Button>
-              <Button size={'lg'} className="justify-center rounded-[10px]">
-                Salvar e publicar
+              <Button
+                disabled={isPending}
+                size={'lg'}
+                className="justify-center rounded-[10px]"
+              >
+                {isPending ? (
+                  <Loader2Icon className="size-5 animate-spin" />
+                ) : (
+                  'Salvar e publicar'
+                )}
               </Button>
             </div>
           </div>

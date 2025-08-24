@@ -22,23 +22,19 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 import SelectImageBtn from '@/components/select-image-btn'
 import { cn } from '@/lib/utils'
+import { Loader2Icon } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useSignUp } from '../api/use-sign-up'
 import { signUpSchema, type SignUpSchemaProps } from '../schema'
 
 export function SignUpForm() {
   const [inputType, setInputType] = useState<'text' | 'password'>('password')
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const form = useForm<SignUpSchemaProps>({
     resolver: zodResolver(signUpSchema),
   })
-
-  function OnSubmit(data: SignUpSchemaProps) {
-    console.log(data)
-    form.reset()
-  }
-
-  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -46,6 +42,12 @@ export function SignUpForm() {
     if (file) {
       form.setValue('image', file)
     }
+  }
+
+  const { mutate, isPending } = useSignUp({ reset: form.reset })
+
+  function OnSubmit(data: SignUpSchemaProps) {
+    mutate(data)
   }
 
   return (
@@ -244,8 +246,17 @@ export function SignUpForm() {
         />
 
         <Button size={'lg'} className="mt-12">
-          Acessar
-          <HugeiconsIcon icon={ArrowRight02Icon} className="size-5" />
+          {isPending ? (
+            <>
+              Cadastrando...
+              <Loader2Icon className="size-5  animate-spin" />
+            </>
+          ) : (
+            <>
+              Cadastrar
+              <HugeiconsIcon icon={ArrowRight02Icon} className="size-5" />
+            </>
+          )}
         </Button>
       </form>
     </Form>

@@ -1,6 +1,10 @@
 import NewProductBtn from '@/components/new-product-btn'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useUser } from '@/context/user-context'
 import { LineChartVisitors } from '@/features/dashboard/components/chart-line-visitors'
 import StatCard from '@/features/dashboard/components/stat-card'
+import { useGetAllProducts } from '@/features/products/api/use-get-all-products'
+import { Status } from '@/features/products/types'
 import {
   SaleTag02Icon,
   Store04Icon,
@@ -11,6 +15,7 @@ import { useState } from 'react'
 import type { DateRange } from 'react-day-picker'
 
 export default function DashboardPage() {
+  const { user } = useUser()
   const today = new Date()
   const [date, setDate] = useState<DateRange | undefined>({
     from: subDays(today, 30),
@@ -21,6 +26,19 @@ export default function DashboardPage() {
     date?.from && date?.to
       ? differenceInCalendarDays(date.to, date.from) + 1
       : 0
+
+  const { data: allProducts, isPending: allProductsPending } =
+    useGetAllProducts({
+      userId: user?.id ?? '',
+    })
+
+  const { data: productsSold, isPending: productsSoldPending } =
+    useGetAllProducts({
+      userId: user?.id ?? '',
+      status: Status.VENDIDO,
+    })
+
+  const isPending = allProductsPending || productsSoldPending
 
   return (
     <div className="flex-1 flex py-5 lg:py-0 lg:pt-16 justify-center">
@@ -45,28 +63,45 @@ export default function DashboardPage() {
 
         <div className="flex flex-col lg:flex-row gap-4 my-10 lg:my-0 lg:mt-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-col justify-between gap-4">
-            <StatCard
-              value={24}
-              title="Produtos vendidos"
-              icon={SaleTag02Icon}
-            />
-            <StatCard
-              value={56}
-              title="Produtos anunciados"
-              icon={Store04Icon}
-            />
-            <div className="sm:col-span-2">
+            {isPending ? (
+              <Skeleton className="w-[256px] h-[104px]" />
+            ) : (
               <StatCard
-                value={1661}
-                title="Pessoas visitantes"
-                icon={UserMultiple02Icon}
-                iconColor="text-gray-300"
+                value={productsSold?.length ?? 0}
+                title="Produtos vendidos"
+                icon={SaleTag02Icon}
               />
-            </div>
+            )}
+            {isPending ? (
+              <Skeleton className="w-[256px] h-[104px]" />
+            ) : (
+              <StatCard
+                value={allProducts?.length ?? 0}
+                title="Produtos anunciados"
+                icon={Store04Icon}
+              />
+            )}
+
+            {isPending ? (
+              <Skeleton className="w-[256px] h-[104px]" />
+            ) : (
+              <div className="sm:col-span-2">
+                <StatCard
+                  value={1661}
+                  title="Pessoas visitantes"
+                  icon={UserMultiple02Icon}
+                  iconColor="text-gray-300"
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex-1">
-            <LineChartVisitors date={date} setDate={setDate} />
+            {isPending ? (
+              <Skeleton className="w-[830px] h-[358px]" />
+            ) : (
+              <LineChartVisitors date={date} setDate={setDate} />
+            )}
           </div>
         </div>
       </div>

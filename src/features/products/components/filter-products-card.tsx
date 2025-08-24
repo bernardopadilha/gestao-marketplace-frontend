@@ -14,17 +14,26 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import type { Dispatch, SetStateAction } from 'react'
+import { Status } from '../types'
 
-export default function FilterProductsCard() {
-  const [searchParams, setSearchParams] = useSearchParams()
+type FilterProductsCardProps = {
+  title: string
+  setTitle: Dispatch<SetStateAction<string>>
+  status: string
+  setStatus: Dispatch<SetStateAction<string>>
+  searchParams: URLSearchParams
+  setSearchParams: (params: URLSearchParams) => void
+}
 
-  const [value, setValue] = useState<string | undefined>(
-    searchParams.get('status') || '',
-  )
-  const [name, setName] = useState<string>(searchParams.get('name') || '')
-
+export default function FilterProductsCard({
+  searchParams,
+  setSearchParams,
+  title,
+  setTitle,
+  status,
+  setStatus,
+}: FilterProductsCardProps) {
   return (
     <div className="p-6 flex flex-col gap-6 bg-white rounded-[20px] lg:min-w-xs lg:max-w-xs">
       <h2 className="font-secondary font-bold text-gray-300">Filtrar</h2>
@@ -33,10 +42,10 @@ export default function FilterProductsCard() {
         <InputIcon
           icon={Search01Icon}
           placeholder="Pesquisar"
-          value={name}
+          value={title}
           onChange={(e) => {
             const val = e.target.value
-            setName(val)
+            setTitle(val)
 
             const params = new URLSearchParams(searchParams)
             if (val) {
@@ -49,9 +58,9 @@ export default function FilterProductsCard() {
         />
         <div className="relative">
           <Select
-            value={value}
+            value={status}
             onValueChange={(val) => {
-              setValue(val)
+              setStatus(val)
 
               const params = new URLSearchParams(searchParams)
               if (val) {
@@ -65,7 +74,7 @@ export default function FilterProductsCard() {
             <SelectTrigger className="w-full" icon={SaleTag02Icon}>
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            {value && (
+            {status && (
               <Button
                 type="button"
                 onClick={(e) => {
@@ -73,6 +82,7 @@ export default function FilterProductsCard() {
                   const params = new URLSearchParams(searchParams)
                   params.delete('status')
                   setSearchParams(params)
+                  setStatus('')
                 }}
                 className="bg-shape text-gray-300 size-6 rounded-full absolute right-8 top-1.5 z-50"
               >
@@ -83,9 +93,9 @@ export default function FilterProductsCard() {
               </Button>
             )}
             <SelectContent>
-              <SelectItem value="anunciado">Anunciado</SelectItem>
-              <SelectItem value="vendido">Vendido</SelectItem>
-              <SelectItem value="cancelado">Cancelado</SelectItem>
+              <SelectItem value={Status.ANUNCIADO}>Anunciado</SelectItem>
+              <SelectItem value={Status.VENDIDO}>Vendido</SelectItem>
+              <SelectItem value={Status.CANCELADO}>Cancelado</SelectItem>
             </SelectContent>
           </Select>
         </div>

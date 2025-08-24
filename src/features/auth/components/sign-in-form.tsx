@@ -18,8 +18,10 @@ import {
   ViewOffIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useSignIn } from '../api/use-sign-in'
 import { signInSchema, type SignInSchemaProps } from '../schema'
 
 export function SignInForm() {
@@ -29,9 +31,13 @@ export function SignInForm() {
     resolver: zodResolver(signInSchema),
   })
 
-  function OnSubmit(data: SignInSchemaProps) {
-    console.log(data)
-    form.reset()
+  const { mutate, isPending } = useSignIn({ reset: form.reset })
+
+  function OnSubmit({ email, password }: SignInSchemaProps) {
+    mutate({
+      email,
+      password,
+    })
   }
 
   return (
@@ -104,8 +110,17 @@ export function SignInForm() {
           )}
         />
         <Button size={'lg'} className="mt-12">
-          Acessar
-          <HugeiconsIcon icon={ArrowRight02Icon} className="size-5" />
+          {isPending ? (
+            <>
+              Acessando...
+              <Loader2Icon className="size-5  animate-spin" />
+            </>
+          ) : (
+            <>
+              Acessar
+              <HugeiconsIcon icon={ArrowRight02Icon} className="size-5" />
+            </>
+          )}
         </Button>
       </form>
     </Form>

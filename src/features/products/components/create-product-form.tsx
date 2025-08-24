@@ -1,0 +1,267 @@
+import SelectImageBtn from '@/components/select-image-btn'
+import { Badge, type Status } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { useUser } from '@/context/user-context'
+import { cn } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AlertCircleIcon, Cancel01Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Loader2 } from 'lucide-react'
+import { useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { useCreateProduct } from '../api/use-create-product'
+import {
+  createProductSchemaProps,
+  type CreateProductSchemaProps,
+} from '../schema'
+import { Category } from '../types'
+
+export function CreateProductForm() {
+  const { user } = useUser()
+
+  const navigate = useNavigate()
+
+  const form = useForm<CreateProductSchemaProps>({
+    resolver: zodResolver(createProductSchemaProps),
+  })
+
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+
+    if (file) {
+      form.setValue('image', file)
+    }
+  }
+
+  const { mutate, isPending } = useCreateProduct({
+    reset: form.reset,
+    userId: user?.id ?? '',
+  })
+
+  function OnSubmit(data: CreateProductSchemaProps) {
+    mutate(data)
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(OnSubmit)}
+        className="flex flex-col items-center lg:items-start lg:flex-row gap-6 mt-10"
+      >
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className="fle-col flex gap-y-2">
+                  <div className="relative inline-flex">
+                    <SelectImageBtn
+                      size="lg"
+                      field={field}
+                      inputRef={inputRef}
+                    />
+                    <input
+                      type="file"
+                      ref={inputRef}
+                      className="hidden"
+                      onChange={handleImageChange}
+                      accept=".jpg, .png, .jpeg, .svg"
+                    />
+                  </div>
+                </div>
+              </FormControl>
+
+              <p
+                data-slot="form-message"
+                className={cn(
+                  'text-destructive text-xs flex items-center gap-1',
+                )}
+              >
+                {form.formState.errors.image && !field.value && (
+                  <>
+                    <HugeiconsIcon
+                      icon={AlertCircleIcon}
+                      className="size-[14px]"
+                    />
+                    Você precisa selecionar uma imagem
+                  </>
+                )}
+              </p>
+            </FormItem>
+          )}
+        />
+
+        <div className="flex-1 space-y-6 bg-white p-6 rounded-[20px]">
+          <div className="w-full flex items-center justify-between">
+            <h2 className="font-secondary font-bold text-gray-300">
+              Dados do produto
+            </h2>
+
+            {status && <Badge status={status as Status}>{status}</Badge>}
+          </div>
+          <div className="space-y-5">
+            <div className="flex items-start gap-5">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem className="flex-3">
+                    <FormLabel className="text-xs">TÍTULO</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Nome do produto"
+                        className="flex-1"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem className="flex-2">
+                    <FormLabel className="text-xs">VALOR</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type="text"
+                          placeholder="0,00"
+                          onChange={(e) => {
+                            let val = e.target.value.replace(/\D/g, '')
+                            val = (Number(val) / 100).toFixed(2)
+                            val = val.replace('.', ',')
+                            field.onChange(val)
+                          }}
+                          className="flex-1 pl-6"
+                        />
+                        <span className="absolute bottom-3 text-gray-400">
+                          R$
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="flex-2">
+                  <FormLabel className="text-xs">DESCRIÇÃO</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="resize-none h-28"
+                      placeholder="Escreva detalhes sobre o produto, tamanho, características"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem className="relative">
+                  <FormLabel className="text-xs">CATEGORIA</FormLabel>
+                  <FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      {field.value && (
+                        <Button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            field.onChange('')
+                          }}
+                          className="bg-shape text-gray-300 size-6 rounded-full absolute right-8 bottom-2 z-50"
+                        >
+                          <HugeiconsIcon
+                            icon={Cancel01Icon}
+                            className="size-4 text-gray-300"
+                          />
+                        </Button>
+                      )}
+                      <SelectContent>
+                        <SelectItem value={Category.BRINQUEDO}>
+                          Brinquedo
+                        </SelectItem>
+                        <SelectItem value={Category.MOVEL}>Móvel</SelectItem>
+                        <SelectItem value={Category.PAPELARIA}>
+                          Papelaria
+                        </SelectItem>
+                        <SelectItem value={Category.SAUDE_E_BELEZA}>
+                          Saúde & Beleza
+                        </SelectItem>
+                        <SelectItem value={Category.UTENSILIO}>
+                          Utensílio
+                        </SelectItem>
+                        <SelectItem value={Category.PAPELARIA}>
+                          Vestuário
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-2 items-center gap-3">
+              <Button
+                type="button"
+                disabled={isPending}
+                size={'lg'}
+                onClick={() => navigate('/produtos')}
+                variant={'outline'}
+                className="justify-center rounded-[10px]"
+              >
+                Cancelar
+              </Button>
+              <Button size={'lg'} className="justify-center rounded-[10px]">
+                {isPending ? (
+                  <Loader2 className="size-5 animate-spin" />
+                ) : (
+                  'Salvar e publicar'
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </Form>
+  )
+}
