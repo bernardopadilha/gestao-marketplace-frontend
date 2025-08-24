@@ -1,3 +1,4 @@
+import { useUser } from '@/context/user-context'
 import { api } from '@/lib/axios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Cookies from 'js-cookie'
@@ -10,6 +11,7 @@ export function useSignUp({
 }: {
   reset: UseFormReset<SignUpSchemaProps>
 }) {
+  const { setNewUser } = useUser()
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
@@ -50,7 +52,7 @@ export function useSignUp({
         }
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Conta criada com sucesso')
       reset({
         email: '',
@@ -60,7 +62,9 @@ export function useSignUp({
         image: null,
         name: '',
       })
+      await queryClient.refetchQueries({ queryKey: ['get-logged-user'] })
       queryClient.invalidateQueries({ queryKey: ['verify-token'] })
+      setNewUser()
     },
     onError: (error) => {
       toast.error(error.message)

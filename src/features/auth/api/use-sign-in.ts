@@ -37,9 +37,9 @@ export function useSignIn({
         password: '',
       })
 
+      await queryClient.refetchQueries({ queryKey: ['get-logged-user'] })
       queryClient.invalidateQueries({ queryKey: ['verify-token'] })
       setNewUser()
-      await queryClient.refetchQueries({ queryKey: ['get-logged-user'] })
     },
     onError: (error) => {
       toast.error(error.message)
