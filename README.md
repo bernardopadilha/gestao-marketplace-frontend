@@ -41,6 +41,7 @@ git clone <url-do-repositorio-front>
 cd gestao-marketplace-frontend
 
 # 3. Instalar dependências
+# 4. node 22 recomendado
 npm install
 ```
 
