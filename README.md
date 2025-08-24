@@ -3,6 +3,8 @@
 Este é o front-end da aplicação **Gestão Marketplace**, desenvolvido em **Vite + React**.
 ---
 
+![Tela de login](./public/gestao.png)
+
 ## 📂 Estrutura do Projeto
 
 - **Vite + React**
