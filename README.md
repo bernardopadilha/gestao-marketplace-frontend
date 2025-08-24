@@ -26,6 +26,9 @@ Este é o front-end da aplicação **Gestão Marketplace**, desenvolvido em **Vi
 ## 🎥 Vídeo de demonstração
 - **https://www.youtube.com/watch?v=tUfusYwvSuA**
 
+## 📚 Documentação
+- **https://gestao-marketplace-backend.onrender.com/docs**
+
 ---
 
 ## ▶️ Como executar localmente
