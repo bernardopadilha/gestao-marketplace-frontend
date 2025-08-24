@@ -23,6 +23,9 @@ Este é o front-end da aplicação **Gestão Marketplace**, desenvolvido em **Vi
 - Front-end: Vercel **https://gestao-marketplace-frontend.vercel.app/**
 - Back-end: Render **https://gestao-marketplace-backend.onrender.com/**
 
+## 🎥 Vídeo de demonstração
+- **https://www.youtube.com/watch?v=tUfusYwvSuA**
+
 ---
 
 ## ▶️ Como executar localmente
