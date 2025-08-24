@@ -57,7 +57,7 @@ export function useCreateProduct({
         image: '',
         description: '',
       })
-      navigate(`produto/${product.id}`)
+      navigate(`/produto/${product.id}`)
     },
     onError: (error) => {
       toast.error(error.message)
